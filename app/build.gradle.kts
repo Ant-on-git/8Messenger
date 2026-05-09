@@ -1,5 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
+
+    // добавляем плагин Google services Gradle для Firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -41,4 +44,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // для работы Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))   // здесь берутся версии firebase модулей
+    // аутентификация
+    implementation("com.google.firebase:firebase-auth")
 }

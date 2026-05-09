@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+
+# Конфиденциальные файлы Firebase
+**/google-services.json
