@@ -35,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        auth.createUserWithEmailAndPassword("denisenkoaa88@gmail.com", "111111")
-//                .addOnSuccessListener(Void -> Log.d("MainActivity", "польз создан"))
-//                .addOnFailureListener(exc -> Log.d("MainActivity", exc.getMessage()));
 
         FirebaseUser currentUser = auth.getCurrentUser();
 
