@@ -91,5 +91,21 @@ Firebase позволяет фронтенд-разработчикам созд
 
 
 
+далее создалиактивити и макеты для логина, регистрации, сброса пароля и страницы Users
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+При вводе в поля на маленьких телефонах, клавиатура может перекрывать поле ввода.
+Чтобы этого небыло, нужно в AndroidManifest.xml
+в каждой активити где это может случиться добавить строку
+    android:windowSoftInputMode="adjustResize"
+        Напр:
+            <activity
+                android:windowSoftInputMode="adjustResize"
+                android:name=".RegistrationActivity"
+                android:exported="false" />
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 
 

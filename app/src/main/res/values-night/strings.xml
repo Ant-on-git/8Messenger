@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">8Messenger</string>
     <string name="messenger">MESSENGER</string>
     <string name="email">Email</string>
     <string name="password">Password</string>

@@ -12,7 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme._8Messenger">
         <activity
-            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:name=".RegistrationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".UsersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
