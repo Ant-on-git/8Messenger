@@ -12,11 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
 
 public class UsersActivity extends AppCompatActivity {
-    private FirebaseAuth auth;
+    private UsersViewModel usersViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,14 @@ public class UsersActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        auth = FirebaseAuth.getInstance();
+        usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+
+        usersViewModel.getUser().observe(
+                this,
+                user -> {
+                    if (user == null) { startActivity( LoginActivity.newIntent(this) ); }
+                }
+        );
     }
 
 
@@ -41,8 +48,7 @@ public class UsersActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menuLogOut) {
-            auth.signOut();
-            startActivity( LoginActivity.newIntent(this) );
+            usersViewModel.logout();
         }
         return super.onOptionsItemSelected(item);
     }
