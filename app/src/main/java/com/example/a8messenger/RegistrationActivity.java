@@ -3,7 +3,6 @@ package com.example.a8messenger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
 
 public class RegistrationActivity extends AppCompatActivity {
     private EditText email;
@@ -23,7 +22,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText lastName;
     private EditText howOld;
     private Button signUpButton;
-    private FirebaseAuth auth;
+    private RegistrationViewModel registrationViewModel;
 
 
     @Override
@@ -37,8 +36,7 @@ public class RegistrationActivity extends AppCompatActivity {
             return insets;
         });
         initParams();
-
-
+        observeViewModel();
 
 
         signUpButton.setOnClickListener(v -> {
@@ -48,14 +46,7 @@ public class RegistrationActivity extends AppCompatActivity {
             String lastNameText = lastName.getText().toString().trim();
             int age = Integer.parseInt(howOld.getText().toString().trim());
 
-            auth.createUserWithEmailAndPassword( emailText, passwordText )
-                    .addOnSuccessListener( authResult -> startActivity(UsersActivity.newIntent(this)) )
-                    .addOnFailureListener( exc -> {
-                        Toast.makeText(this, exc.getMessage(), Toast.LENGTH_SHORT).show();
-
-                        Log.d("**************", email.getText().toString() );
-                        Log.d("**************", password.getText().toString() );
-                    });
+            registrationViewModel.signUp(emailText, passwordText, nameText, lastNameText, age);
         });
     }
 
@@ -66,8 +57,27 @@ public class RegistrationActivity extends AppCompatActivity {
         lastName    = findViewById(R.id.editText_Registration_LastName);
         howOld      = findViewById(R.id.editText_Registration_HowOld);
         signUpButton= findViewById(R.id.button_Registration_SignUp);
-        auth        = FirebaseAuth.getInstance();
+        registrationViewModel = new ViewModelProvider(this).get(RegistrationViewModel.class);
     }
+
+
+    private void observeViewModel() {
+        registrationViewModel.getLoginError().observe(
+                this,
+                errorMessage -> {
+                    if (errorMessage != null) { Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show(); }
+                });
+        registrationViewModel.getUser().observe(
+                this,
+                user -> {
+                    if (user != null) {
+                        startActivity( UsersActivity.newIntent(this) );
+                        finish();
+                    }
+                }
+        );
+    }
+
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, RegistrationActivity.class);

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -19,6 +20,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     FirebaseAuth auth;
     private EditText email;
     private Button resetButton;
+    private ResetPasswordViewModel resetPasswordViewModel;
 
 
     @Override
@@ -36,16 +38,36 @@ public class ResetPasswordActivity extends AppCompatActivity {
             return insets;
         });
 
-        auth        = FirebaseAuth.getInstance();
+        resetPasswordViewModel = new ViewModelProvider(this).get(ResetPasswordViewModel.class);
         email       = findViewById(R.id.editText_ResetPassword_Email);
         resetButton = findViewById(R.id.button_ResetPassword_send);
 
+        observeViewModel();
+
         resetButton.setOnClickListener(v -> {
-            auth.sendPasswordResetEmail( email.getText().toString() )
-                    .addOnSuccessListener(Void -> Toast.makeText(this, "ОТПРАВЛЕНО", Toast.LENGTH_SHORT).show() )
-                    .addOnFailureListener(exc -> Toast.makeText(this, exc.getMessage(), Toast.LENGTH_SHORT).show() );
+            resetPasswordViewModel.resetPassword(email.getText().toString());
         });
     }
+
+
+    private void observeViewModel() {
+        resetPasswordViewModel.getError().observe(
+                this,
+                errorMessage -> {
+                    if (errorMessage != null) {
+                        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        resetPasswordViewModel.getSuccess().observe(
+                this,
+                success -> {
+                    if (success) {
+                        Toast.makeText(this, "Ссылка для сброса отправлена", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+    }
+
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, ResetPasswordActivity.class);
