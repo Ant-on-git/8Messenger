@@ -44,7 +44,7 @@ public class RegistrationActivity extends AppCompatActivity {
             String passwordText = password.getText().toString().trim();
             String nameText = name.getText().toString().trim();
             String lastNameText = lastName.getText().toString().trim();
-            int age = Integer.parseInt(howOld.getText().toString().trim());
+            String age = howOld.getText().toString().trim();
 
             registrationViewModel.signUp(emailText, passwordText, nameText, lastNameText, age);
         });

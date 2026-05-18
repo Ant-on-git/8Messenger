@@ -21,7 +21,16 @@ public class RegistrationViewModel extends ViewModel {
     }
 
 
-    public void signUp(String email, String password, String name, String lastName, int age) {
+    public void signUp(String email, String password, String name, String lastName, String age) {
+        if (email.trim().isEmpty()  || password.trim().isEmpty()) {
+            loginError.setValue("Email или пароль не могут быть пустыми");
+            return;
+        }
+        int intAge;
+        try {intAge = Integer.parseInt(age);} catch (NumberFormatException e) {
+            loginError.setValue("Возраст должен быть числом");
+            return;
+        }
         auth.createUserWithEmailAndPassword( email, password )  // если польз зарегался -> срабатывает addAuthStateListener (см. выше). и затем вход в систему -> переход на юзерс активити
                 .addOnFailureListener( exc -> loginError.setValue( exc.getMessage() ) );
     }

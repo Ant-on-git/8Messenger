@@ -13,17 +13,21 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class UsersActivity extends AppCompatActivity {
     private UsersViewModel usersViewModel;
+    private RecyclerView recyclerView_users;
+    private UsersAdapter usersAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_users);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.recyclerView_users), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -36,6 +40,12 @@ public class UsersActivity extends AppCompatActivity {
                     if (user == null) { startActivity( LoginActivity.newIntent(this) ); }
                 }
         );
+
+
+        recyclerView_users = findViewById(R.id.recyclerView_users);
+        usersAdapter = new UsersAdapter();
+        recyclerView_users.setAdapter(usersAdapter);
+
     }
 
 

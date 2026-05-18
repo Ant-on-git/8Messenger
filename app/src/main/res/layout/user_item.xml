@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardUseCompatPadding="true">
+<!--  app:cardUseCompatPadding="true"
+
+Когда вы плагините app:cardUseCompatPadding="true", вы принудительно заставляете Android 5.0+
+добавлять точно такие же дополнительные отступы вокруг карточки, какие создаются на старых версиях
+для отрисовки теней. В итоге размеры и положение элементов становятся идентичными на всех устройствах.
+-->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        
+        
+        <TextView
+            android:id="@+id/textView_UserInfo"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            tools:text="John Potato 33"/>
+
+        <View
+            android:id="@+id/view_isOnline"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="16dp"
+            tools:background="@drawable/circle_offline"/>
+        
+        
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
