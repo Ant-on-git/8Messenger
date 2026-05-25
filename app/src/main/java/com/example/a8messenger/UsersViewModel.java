@@ -18,9 +18,7 @@ public class UsersViewModel extends ViewModel {
         // если не авторизован user = null, нсли авторизован user = авторизованный польз
     }
 
-    public void logout() {
-        auth.signOut();
-    }
+    public void logout() { auth.signOut(); }
 
 
     public LiveData<FirebaseUser> getUser() {

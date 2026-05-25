@@ -15,6 +15,9 @@ public class User {
         this.age = age;
         this.isOnline = isOnline;
     }
+    public User() {
+        // пустой конструктор нужен Firebase
+    }
 
     public String getId() { return id; }
 
@@ -25,4 +28,15 @@ public class User {
     public int getAge() { return age; }
 
     public Boolean getOnline() { return isOnline; }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", isOnline=" + isOnline +
+                '}';
+    }
 }

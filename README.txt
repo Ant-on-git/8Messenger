@@ -121,7 +121,7 @@ Firebase позволяет фронтенд-разработчикам созд
 
 
 
-Короче, сделали все что связано с логином:
+Сделали все что связано с логином:
     - login activity
     - registration activity
     - reset password activity
@@ -130,6 +130,71 @@ Firebase позволяет фронтенд-разработчикам созд
 Ничего нового тут нет, потому без описания
 
 
+Потом сделали для отображения списка пользователей (Users activity):
+    - RecyclerView,
+    - adapter,
+    - user_item
+тоже ничего нового
+
+
+
+
+
+**************************************      БД Firebase
+При регистрации пользователя создается запись в бд с id, email, имя и тд
+документация - build - Firebase Realtime Database - android - get started
+консоль - realtime database - create.. - united states - test mode
+
+дальше документация рекомендует настроить правили доступа, но препод решил этого не делать.
+
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // база данных
+    private DatabaseReference databaseReference = firebaseDatabase.getReference("Messages");    // Messages - таблица в бд. если нет - создается
+    databaseReference.setValue("My second zapis");      - внести запсь в бд в таблицу Messages
+            {
+              "Messages": "My second zapis"
+            }
+метод   .setValue   перезапишет старые данные новыми
+Если нужно не перезаписать весь Messages, а добавить новое сообщение — обычно используют push():
+    databaseReference.push().setValue("Новое сообщение");
+Тогда получится:
+    {
+      "Messages": {
+        -OtTp20VNyGr9R5lSqEq: "My fird zapis"
+        -OtTp8X3HocMmdcPsPlp: "My четвертый zapis"
+      }
+    }
+push() создает уникальный id для каждой записи.
+
+        запись в бд
+        for (int i=0; i<10; i++) {
+            String zapis = String.format("My %d zapis", i);
+            databaseReference.push().setValue(zapis);
+        }
+        // чтение из бд
+        databaseReference.addValueEventListener(new ValueEventListener() {      // чтоб читать надо повесить слушатель
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {          // слушатель на изменение записи
+                    // onDataChange вызывается когда происходит изменение в таблицк Messages     (databaseReference = firebaseDatabase.getReference("Messages");)
+                    // т.е. при изменении таблицы Messages вызывается onDataChange, в который прилетает вся таблица Messages в обновленном виде  - snapshot
+
+                for ( DataSnapshot dataSnapshot : snapshot.getChildren() ) {    // snapshot.getChildren() - список всех записей в таблице Messages
+                        // dataSnapshot - одна запись в таблице Messages
+                    String message = dataSnapshot.getValue(String.class);   // String.class - тип записи в таблице
+                    Log.d("UsersActivity", message);
+                }
+            };
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {         // слушатель на ошибку
+
+            }
+        });
+
+В таблицу можно вносить объекты:
+        for (int i=0; i<10; i++) {
+            User user = new User("id " + i , "name " + i, "last name " + i, i, true);
+            databaseReference.push().setValue(user);
+        }
 
 
 

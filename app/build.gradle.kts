@@ -49,4 +49,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.13.0"))   // здесь берутся версии firebase модулей
     // аутентификация
     implementation("com.google.firebase:firebase-auth")
+    // база данных
+    implementation("com.google.firebase:firebase-database")
 }
