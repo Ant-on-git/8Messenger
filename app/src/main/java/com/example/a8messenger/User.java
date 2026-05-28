@@ -5,15 +5,15 @@ public class User {
     private String name;
     private String lastName;
     private int age;
-    private Boolean isOnline;
+    private Boolean online;
 
 
-    public User(String id, String name, String lastName, int age, boolean isOnline) {
+    public User(String id, String name, String lastName, int age, boolean online) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.age = age;
-        this.isOnline = isOnline;
+        this.online = online;
     }
     public User() {
         // пустой конструктор нужен Firebase
@@ -27,7 +27,7 @@ public class User {
 
     public int getAge() { return age; }
 
-    public Boolean getOnline() { return isOnline; }
+    public Boolean getOnline() { return online; }
 
     @Override
     public String toString() {
@@ -36,7 +36,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
-                ", isOnline=" + isOnline +
+                ", online=" + online +
                 '}';
     }
 }

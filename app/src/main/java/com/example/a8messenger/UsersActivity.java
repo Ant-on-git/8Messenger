@@ -22,6 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class UsersActivity extends AppCompatActivity {
     private UsersViewModel usersViewModel;
@@ -29,6 +32,7 @@ public class UsersActivity extends AppCompatActivity {
     private UsersAdapter usersAdapter;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // база данных
     private DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
+    private List<User> users = new ArrayList<>();
 
 
     @Override
@@ -43,41 +47,33 @@ public class UsersActivity extends AppCompatActivity {
         });
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
 
-        usersViewModel.getUser().observe(
-                this,
-                user -> {
-                    if (user == null) { startActivity( LoginActivity.newIntent(this) ); }
-                }
-        );
+
+        observeViewModel();
+        initViews();
+
+    }
 
 
+
+    private void initViews() {
         recyclerView_users = findViewById(R.id.recyclerView_users);
         usersAdapter = new UsersAdapter();
         recyclerView_users.setAdapter(usersAdapter);
+    }
 
 
-        // запись в бд
-//        for (int i=0; i<10; i++) {
-//            User user = new User("id " + i , "name " + i, "last name " + i, i, true);
-//            databaseReference.push().setValue(user);
-//        }
-        // чтение из бд
-        databaseReference.addValueEventListener(new ValueEventListener() {      // чтоб читать надо повесить слушатель
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {          // слушатель на изменение записи
-                // onDataChange вызывается когда происходит изменение в таблицк Messages     (databaseReference = firebaseDatabase.getReference("Messages");)
-                // т.е. при изменении таблицы Messages вызывается onDataChange, в который прилетает вся таблица Messages в обновленном виде  - snapshot
-                for ( DataSnapshot dataSnapshot : snapshot.getChildren() ) {    // snapshot.getChildren() - список всех записей в таблице Messages
-                    // dataSnapshot - одна запись в таблице Messages
-                    User user = dataSnapshot.getValue(User.class);   // User.class - тип записи в таблице
-                    Log.d("UsersActivity", user.toString());
+    private void observeViewModel() {
+        usersViewModel.getUser().observe(
+                this,
+                user -> {
+                    if (user == null) { startActivity(LoginActivity.newIntent(this)); }
                 }
-            }
+        );
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {         // слушатель на ошибку
-            }
-        });
+        usersViewModel.getUsers().observe(
+                this,
+                users -> usersAdapter.setUsers(users)
+        );
     }
 
 

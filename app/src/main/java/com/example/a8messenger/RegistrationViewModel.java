@@ -7,17 +7,24 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationViewModel extends ViewModel {
     private FirebaseAuth auth;
     private MutableLiveData<String> loginError = new MutableLiveData<>();
-    private MutableLiveData<FirebaseUser> user = new MutableLiveData<>();
+    private MutableLiveData<FirebaseUser> user = new MutableLiveData<>();   // здесь храним пользователя (и подписываемся на его в активити)
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference usersDatabaseReference;
 
     public RegistrationViewModel() {
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(firebaseAuth -> {     // слушатель состояния авторизации. меняется при входе-выходе
             if (firebaseAuth.getCurrentUser() != null) { user.setValue( firebaseAuth.getCurrentUser() ); }  // если польз авторизован, засовываем его в лайвдату
-        });     // видимо шоб зареганный польз не мог создавать кучу акков
+        });     // далее в активити, если user есть - переход на юзерс активити
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        usersDatabaseReference = firebaseDatabase.getReference("Users");
     }
 
 
@@ -31,7 +38,23 @@ public class RegistrationViewModel extends ViewModel {
             loginError.setValue("Возраст должен быть числом");
             return;
         }
+        // createUserWithEmailAndPassword() в Firebase не только создаёт аккаунт, но и автоматически логинит пользователя после успешной регистрации.
         auth.createUserWithEmailAndPassword( email, password )  // если польз зарегался -> срабатывает addAuthStateListener (см. выше). и затем вход в систему -> переход на юзерс активити
+                .addOnSuccessListener( authResult -> {
+                    // создаем пользователя
+                    FirebaseUser currentUser = authResult.getUser();
+                    if (currentUser == null) {
+                        return;
+                    }
+                    User user = new User(
+                            currentUser.getUid(),   // получаем id нового польз., присвоенный фаербейсом
+                            name,
+                            lastName,
+                            intAge,
+                            true
+                    );
+                    usersDatabaseReference.child( currentUser.getUid() ).setValue( user ); // добавляем пользователя в бд по ключу = id польз.
+                })
                 .addOnFailureListener( exc -> loginError.setValue( exc.getMessage() ) );
     }
 

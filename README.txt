@@ -190,11 +190,18 @@ push() создает уникальный id для каждой записи.
             }
         });
 
+!! usersDatabaseReference.child( currentUser.getUid() ).setValue( user ); // добавляем пользователя в бд по ключу = id польз.
+
 В таблицу можно вносить объекты:
         for (int i=0; i<10; i++) {
             User user = new User("id " + i , "name " + i, "last name " + i, i, true);
             databaseReference.push().setValue(user);
         }
+
+
+Это были пробы.  Идем дальше по проекту.
+Пользователей добавлять в бд надо при регистрации. что и делаем:
+
 
 
 
