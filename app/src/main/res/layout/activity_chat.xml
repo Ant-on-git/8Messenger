@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity"
+    android:background="#111200FF">
+    
+    <TextView
+        android:id="@+id/textView_chatTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Bond"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="#8200EE"
+        android:padding="16dp"/>
+
+    <View
+        android:id="@+id/view_chatOnlineStatus"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/circle_online"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView_chatTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_chatTitle"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_chat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView_chatTitle"
+        app:layout_constraintBottom_toTopOf="@+id/editText_message"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/my_message_item" />
+
+    <EditText
+        android:id="@+id/editText_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/white"
+        android:textColor="@color/black"
+        android:hint="..."
+        android:inputType="textMultiLine"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingEnd="48dp"
+        tools:text="sdf sdf sdf sdfsdfsgsfgsdfg sdfg sdfg fgdfgd sdf sdfs df sdfs dfsdfsdf"/>
+
+    <ImageView
+        android:id="@+id/imageView_sendMessage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editText_message"
+        app:layout_constraintEnd_toEndOf="@+id/editText_message"
+        app:layout_constraintTop_toTopOf="@+id/editText_message"
+        app:srcCompat="@android:drawable/ic_menu_send"
+        app:tint="#6200EE" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
