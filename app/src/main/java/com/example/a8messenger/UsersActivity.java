@@ -3,7 +3,6 @@ package com.example.a8messenger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,11 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +29,7 @@ public class UsersActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // база данных
     private DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
     private List<User> users = new ArrayList<>();
+    private String currentUserId;   // id текущего польз. прилетает при вызове активити через Intent
 
 
     @Override
@@ -51,6 +48,12 @@ public class UsersActivity extends AppCompatActivity {
         observeViewModel();
         initViews();
 
+        currentUserId = getIntent().getStringExtra("currentUserId");
+
+        usersAdapter.setOnUserClickListener(user -> {   // user - тот пользователь, по которому кликает польз.
+            Intent intent = ChatActivity.newIntent(UsersActivity.this, currentUserId, user.getId());
+            startActivity( intent );
+        });
     }
 
 
@@ -92,8 +95,9 @@ public class UsersActivity extends AppCompatActivity {
     }
 
 
-    public static Intent newIntent(Context context) {
+    public static Intent newIntent(Context context, String currentUserId) {
         Intent intent = new Intent(context, UsersActivity.class);
+        intent.putExtra("currentUserId", currentUserId);
         return intent;
     }
 }

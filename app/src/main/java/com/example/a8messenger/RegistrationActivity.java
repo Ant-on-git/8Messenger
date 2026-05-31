@@ -71,7 +71,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 this,
                 user -> {
                     if (user != null) {
-                        startActivity( UsersActivity.newIntent(this) );
+                        startActivity( UsersActivity.newIntent(this, user.getUid()) );
                         finish();
                     }
                 }

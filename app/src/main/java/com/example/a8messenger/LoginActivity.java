@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                 this,
                 user -> {
                     if (user != null) {
-                        startActivity( UsersActivity.newIntent(this) );     // если пользователь авторизован переходим в активити Users
+                        startActivity( UsersActivity.newIntent(this, user.getUid()) );     // если пользователь авторизован переходим в активити Users
                         finish();  // закрываем логин активити чтоб нельзя было вернуться при нажатии на кнопку назад
                     }
                 }
