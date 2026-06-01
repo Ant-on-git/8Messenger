@@ -14,17 +14,14 @@ public class RegistrationViewModel extends ViewModel {
     private FirebaseAuth auth;
     private MutableLiveData<String> loginError = new MutableLiveData<>();
     private MutableLiveData<FirebaseUser> user = new MutableLiveData<>();   // здесь храним пользователя (и подписываемся на его в активити)
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference usersDatabaseReference;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();;
+    private DatabaseReference usersDatabaseReference = firebaseDatabase.getReference("Users");
 
     public RegistrationViewModel() {
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(firebaseAuth -> {     // слушатель состояния авторизации. меняется при входе-выходе
             if (firebaseAuth.getCurrentUser() != null) { user.setValue( firebaseAuth.getCurrentUser() ); }  // если польз авторизован, засовываем его в лайвдату
         });     // далее в активити, если user есть - переход на юзерс активити
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        usersDatabaseReference = firebaseDatabase.getReference("Users");
     }
 
 
