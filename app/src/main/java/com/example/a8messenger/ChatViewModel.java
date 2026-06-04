@@ -33,6 +33,8 @@ public class ChatViewModel extends ViewModel {
 
 
     public ChatViewModel(String currentUserId, String otherUserId) {
+        // конструктор ChatViewModel - здесь вешаем слушателей на изменение состояния пользователя, с кот. общаемся
+        // и на обновление списка сообщений
         this.currentUserId = currentUserId;
         this.otherUserId = otherUserId;
 

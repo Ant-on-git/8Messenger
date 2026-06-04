@@ -8,12 +8,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
     private  static final int VIEW_TYPE_MY_MESSAGE = 1;
     private  static final int VIEW_TYPE_OTHER_MESSAGE = 2;
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
     private String currentUserId;
 
 

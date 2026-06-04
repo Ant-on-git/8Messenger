@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private String currentUserId;
     private String otherUserId;
+    private ChatViewModel chatViewModel;
+    private ChatViewModelFactory chatViewModelFactory;
+
 
 
     @Override
@@ -40,35 +45,27 @@ public class ChatActivity extends AppCompatActivity {
             return insets;
         });
 
+        initViews();
         currentUserId = getIntent().getStringExtra("currentUserId");
         otherUserId = getIntent().getStringExtra("otherUserId");
 
-        initViews();
+
+        chatViewModelFactory = new ChatViewModelFactory(currentUserId, otherUserId);
+        chatViewModel = new ViewModelProvider(this, chatViewModelFactory).get(ChatViewModel.class);
+
+        observeViewModel();
 
         chatAdapter = new ChatAdapter( currentUserId );
+        recyclerView_chat.setAdapter( chatAdapter );
 
-
-        List<Message> messages = new ArrayList<>();
-        for (int i=0; i<20; i++) {
-            Message message;
-            if (i % 2 == 0) {
-                message = new Message(
-                        "Text " + i,
-                        otherUserId,
-                        currentUserId
-                );
-            } else {
-                message = new Message(
-                        "Text " + i,
-                        currentUserId,
-                        otherUserId
-                );
-            }
-            messages.add(message);
-        }
-        chatAdapter.setMessages(messages);
-
-        recyclerView_chat.setAdapter(chatAdapter);
+        imageView_sendMessage.setOnClickListener(v -> {
+            Message message = new Message(
+                    editText_message.getText().toString().trim(),
+                    currentUserId,
+                    otherUserId
+            );
+            chatViewModel.sendMessage( message );
+        });
     }
 
 
@@ -78,6 +75,29 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView_chat = findViewById(R.id.recyclerView_chat);
         editText_message = findViewById(R.id.editText_message);
         imageView_sendMessage = findViewById(R.id.imageView_sendMessage);
+    }
+
+
+    private void observeViewModel() {
+        chatViewModel.getMessages().observe(this, messages -> {
+            chatAdapter.setMessages( messages );
+        });
+
+        chatViewModel.getError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                Toast.makeText(ChatActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        chatViewModel.getMessageSend().observe(this, messageSand -> {
+            if (messageSand) {  // если сообщение отправлено - очистить поле  ввода
+                editText_message.setText("");
+            }
+        });
+
+        chatViewModel.getOtherUser().observe(this, user -> {
+            textView_chatTitle.setText( user.getName() + " " + user.getLastName() );
+        });
     }
 
 

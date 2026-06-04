@@ -206,6 +206,8 @@ push() создает уникальный id для каждой записи.
 класс для сообщений, адаптер для ресайклервью чата,
 
 
+потом чатвьюмодель
+
 структура сообщений:
 Messages
     - id пользователя 1
@@ -251,6 +253,58 @@ Messages
 
 При отправке сообщения создается запись и у отправителя и у получателя
 т.е. каждое сообщение записывается в бд и к отправителю и к получателю
+
+
+
+
+
+
+
+
+*********************************************   ChatViewModelFactory
+
+сделали конструктор в ChatViewModel:
+
+
+    public ChatViewModel( String currentUserId, String otherUserId ) {
+        ...
+
+        usersDatabaseReference.child( otherUserId ).addValueEventListener(new ValueEventListener() {    // Сообщай мне каждый раз, когда данные этого пользователя изменятся.
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {  // прилетает при каком то изменении в записи польз: напр, online \ offline
+                .. получаем пользователя с кем открыт чат и устанавливаем его в otherUser лайвдату
+            }
+            ...
+        });
+
+        messagesDatabaseReference.child( currentUserId ).child( otherUserId ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                .. получаем сообщения из бд и устанавливаем их в messages лайвдату
+            }
+            ...
+        });
+
+    }
+
+как видно, в конструктор нужно передать данные String currentUserId, String otherUserId
+т.е. при создании экземпляра ChayViewModel нужно передать Id текущего пользователя и  Id пользователя, с которым он переписывается.
+
+проблема в том, что экщемпляр вьюмодели по умолчанию создается след. образом:
+
+    ChatActivity...
+        ...
+        chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+
+        сделать так:
+        chatViewModel = new ChatViewModel(currentUserId, otherUserId);
+        нельзя, т.к. такой способ не переживет переворот экрана
+
+
+т.е. в такую запись некуда передать параметры.
+чтоб это сделать надо создать ViewModelFactory
+
+в нем надо переопределить метод create, который должен возвращать экземпляр нужной нам вьюмодели
 
 
 
