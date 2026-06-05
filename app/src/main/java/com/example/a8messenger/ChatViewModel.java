@@ -14,6 +14,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class ChatViewModel extends ViewModel {
     private MutableLiveData<List<Message>> messages = new MutableLiveData<>();
     private MutableLiveData<User> otherUser = new MutableLiveData<>();
@@ -46,7 +48,9 @@ public class ChatViewModel extends ViewModel {
                 otherUser.setValue(user);
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError e) {
+                error.setValue(e.getMessage());
+            }
         });
 
         messagesDatabaseReference.child( currentUserId ).child( otherUserId ).addValueEventListener(new ValueEventListener() {
@@ -61,7 +65,9 @@ public class ChatViewModel extends ViewModel {
                 messages.setValue( messageListFromDb );
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError e) {
+                error.setValue(e.getMessage());
+            }
         });
 
     }
@@ -82,5 +88,12 @@ public class ChatViewModel extends ViewModel {
                             .addOnFailureListener( exc -> error.setValue( exc.getMessage() ) );
                 } )
                 .addOnFailureListener( exc -> error.setValue( exc.getMessage() ) );
+    }
+
+
+
+    public void setUserOnlineStatus(Boolean isOnline) {
+        // получаем польз из бд (по id), получаем заначение его поля online и устанавливаем что нужно
+        usersDatabaseReference.child( currentUserId ).child("online").setValue( isOnline );
     }
 }

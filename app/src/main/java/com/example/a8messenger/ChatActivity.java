@@ -2,6 +2,7 @@ package com.example.a8messenger;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -97,7 +99,29 @@ public class ChatActivity extends AppCompatActivity {
 
         chatViewModel.getOtherUser().observe(this, user -> {
             textView_chatTitle.setText( user.getName() + " " + user.getLastName() );
+
+            int backgroundResId;
+            if (user.getOnline()) {
+                backgroundResId = R.drawable.circle_online;
+            } else {
+                backgroundResId = R.drawable.circle_offline;
+            }
+            Drawable background = ContextCompat.getDrawable(ChatActivity.this, backgroundResId);
+            view_chatOnlineStatus.setBackground( background );
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chatViewModel.setUserOnlineStatus( true );     // если экран активен = пользователь онлайн
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        chatViewModel.setUserOnlineStatus( false );    // если не активно = офлайн
     }
 
 

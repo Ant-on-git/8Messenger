@@ -81,6 +81,19 @@ public class UsersActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        usersViewModel.setUserOnlineStatus( true );     // если экран активен = пользователь онлайн
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        usersViewModel.setUserOnlineStatus( false );    // если не активно = офлайн
+    }
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;

@@ -56,10 +56,14 @@ public class UsersViewModel extends ViewModel {
 
     public void logout() { auth.signOut(); }
 
-
-    public LiveData<FirebaseUser> getUser() {
-        return user;
-    }
-
+    public LiveData<FirebaseUser> getUser() { return user; }
     public LiveData<List<User>> getUsers() { return users; }
+
+
+    public void setUserOnlineStatus(Boolean isOnline) {
+        // получаем польз из бд (по id), получаем заначение его поля online и устанавливаем что нужно
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) { return; }
+        usersDatabaseReference.child( currentUser.getUid() ).child("online").setValue( isOnline );
+    }
 }
