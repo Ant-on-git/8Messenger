@@ -54,7 +54,10 @@ public class UsersViewModel extends ViewModel {
         });
     }
 
-    public void logout() { auth.signOut(); }
+    public void logout() {
+        setUserOnlineStatus(false);
+        auth.signOut();
+    }
 
     public LiveData<FirebaseUser> getUser() { return user; }
     public LiveData<List<User>> getUsers() { return users; }
